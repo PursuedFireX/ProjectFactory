@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14256938999301d429731adf5feda91b, type: 3}
+  m_Name: Floor
+  m_EditorClassIdentifier: 
+  width: 1
+  height: 1
+  prefab: {fileID: 1427799711522928526, guid: f75ba8363c7e95342a5dc6d065099229, type: 3}
+  visual: {fileID: 7904471832480096299, guid: f058e9ecf77666d43aff96b06036060f, type: 3}
+  partType: 0
+  draggable: 1
