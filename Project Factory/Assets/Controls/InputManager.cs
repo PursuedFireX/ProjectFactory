@@ -99,6 +99,20 @@ namespace PFX
             return inputs.Player.Shift.IsPressed();
         }
 
+        public bool ToggleDebugConsole()
+        {
+            return inputs.Player.ToggleDebugConsole.triggered;
+        }
+
+        public bool ToggleDebugOverlay()
+        {
+            return inputs.Player.ToggleDebugOverlay.triggered;
+        }
+
+        public bool Enter()
+        {
+            return inputs.Player.Enter.triggered;
+        }
     }
 }
 

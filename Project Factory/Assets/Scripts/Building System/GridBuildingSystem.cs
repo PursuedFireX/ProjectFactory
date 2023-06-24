@@ -23,7 +23,7 @@ namespace PFX
         public int gridHeight;
         public float cellSize;
 
-        public bool showGrid;
+        public bool showGrid = false;
         public bool showGridDebug;
         private bool canDragBuild;
 
@@ -66,128 +66,130 @@ namespace PFX
 
         private void Update()
         {
-            if (buildState == BuildState.Build || buildState == BuildState.Destroy)
+            if(GameManager.I.CurrentState == GameState.Build)
             {
-                HandleGhostMaterialColor();
-                BuildingPart.Dir prevDir = dir;
-
-                if (InputManager.I.LeftMouseClick())
+                if (buildState == BuildState.Build || buildState == BuildState.Destroy)
                 {
-                    if (currentPart.partType == BuildingPart.PartType.Foundation)
-                    {
-                        dir = BuildingPart.Dir.Down;
-                    }
-                    grid.GetXZ(Mouse3D.GetMouseWorldPosition(), out int x, out int z);
-                    if (grid.GetGridObject(x, z) != null)
-                    {
-                        startCell = grid.GetGridObject(x, z);
-                        startPos = GetMouseWorldSnappedPosition();
-                        canDragBuild = true;
-                        prevDir = dir;
-                    }
-                    else
-                    {
-                        canDragBuild = false;
-                        Debug.Log("Out of building bounds.");
-                    }
-                }
+                    HandleGhostMaterialColor();
+                    BuildingPart.Dir prevDir = dir;
 
-
-
-
-                if (InputManager.I.LeftMouseClick(true))
-                {
-                    if (grid.GetGridObject(GetMouseWorldSnappedPosition()).GetCellPosition() != startCell.GetCellPosition())
+                    if (InputManager.I.LeftMouseClick())
                     {
-                        isDragging = true;
-                    }
-                    else
-                    {
-                        isDragging = false;
-                    }
-
-                    if (startCell != null)
-                    {
-                        HandleBoxSelection();
-                    }
-                }
-
-                if (InputManager.I.LeftMouseRelease())
-                {
-                    isDragging = false;
-                    ghostObject.transform.localScale = baseGhostScale;
-
-                    grid.GetXZ(Mouse3D.GetMouseWorldPosition(), out int x, out int z);
-                    if (grid.GetGridObject(x, z) != null)
-                    {
-                        if (canDragBuild)
+                        if (currentPart.partType == BuildingPart.PartType.Foundation)
                         {
-                            endCell = grid.GetGridObject(x, z);
-                            if (buildState == BuildState.Build)
-                                PlacementHandler();
-
+                            dir = BuildingPart.Dir.Down;
+                        }
+                        grid.GetXZ(Mouse3D.GetMouseWorldPosition(), out int x, out int z);
+                        if (grid.GetGridObject(x, z) != null)
+                        {
+                            startCell = grid.GetGridObject(x, z);
+                            startPos = GetMouseWorldSnappedPosition();
+                            canDragBuild = true;
+                            prevDir = dir;
+                        }
+                        else
+                        {
+                            canDragBuild = false;
+                            Debug.Log("Out of building bounds.");
                         }
                     }
-                    else
-                        Debug.Log("Out of building bounds.");
 
-                    dir = prevDir;
 
-                    if (buildState == BuildState.Destroy)
+
+
+                    if (InputManager.I.LeftMouseClick(true))
                     {
-                        RaycastHit hit;
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        if (Physics.Raycast(ray, out hit, buildLayers))
+                        if (grid.GetGridObject(GetMouseWorldSnappedPosition()).GetCellPosition() != startCell.GetCellPosition())
                         {
-                            PlacedObject po = hit.transform.GetComponentInParent<PlacedObject>();
-                            if (po != null)
-                            {
-                                Debug.Log(po);
+                            isDragging = true;
+                        }
+                        else
+                        {
+                            isDragging = false;
+                        }
 
-                                GridObject go = grid.GetGridObject(x, z);
-                                if (go != null)
-                                {
-                                    if (po.GetPartType() == BuildingPart.PartType.Foundation)
-                                    {
-                                        Debug.Log("Floor");
-                                        go.ClearPlacedObject();
-                                        po.DestroySelf();
-                                    }
-                                    else if (po.GetPartType() == BuildingPart.PartType.Edge)
-                                    {
-                                        go.ClearEdgeObject(po.GetEdge());
-                                        po.DestroySelf();
-                                    }
-                                }
+                        if (startCell != null)
+                        {
+                            HandleBoxSelection();
+                        }
+                    }
+
+                    if (InputManager.I.LeftMouseRelease())
+                    {
+                        isDragging = false;
+                        ghostObject.transform.localScale = baseGhostScale;
+
+                        grid.GetXZ(Mouse3D.GetMouseWorldPosition(), out int x, out int z);
+                        if (grid.GetGridObject(x, z) != null)
+                        {
+                            if (canDragBuild)
+                            {
+                                endCell = grid.GetGridObject(x, z);
+                                if (buildState == BuildState.Build)
+                                    PlacementHandler();
 
                             }
                         }
+                        else
+                            Debug.Log("Out of building bounds.");
+
+                        dir = prevDir;
+
+                        if (buildState == BuildState.Destroy)
+                        {
+                            RaycastHit hit;
+                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                            if (Physics.Raycast(ray, out hit, buildLayers))
+                            {
+                                PlacedObject po = hit.transform.GetComponentInParent<PlacedObject>();
+                                if (po != null)
+                                {
+                                    Debug.Log(po);
+
+                                    GridObject go = grid.GetGridObject(x, z);
+                                    if (go != null)
+                                    {
+                                        if (po.GetPartType() == BuildingPart.PartType.Foundation)
+                                        {
+                                            Debug.Log("Floor");
+                                            go.ClearPlacedObject();
+                                            po.DestroySelf();
+                                        }
+                                        else if (po.GetPartType() == BuildingPart.PartType.Edge)
+                                        {
+                                            go.ClearEdgeObject(po.GetEdge());
+                                            po.DestroySelf();
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+
+                    }
+
+                    //Rotate
+                    if (Input.GetKeyDown(KeyCode.R))
+                    {
+                        dir = BuildingPart.GetNextDir(dir);
+                        Debug.Log(dir);
+                    }
+
+                    //Change Part
+                    if (Input.GetKeyDown(KeyCode.Alpha1))
+                    {
+                        RefreshSelectedObjectType();
+                        currentPart = parts[0];
+                        RefreshSelectedObjectType();
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.Alpha2))
+                    {
+                        currentPart = parts[1];
+                        RefreshSelectedObjectType();
                     }
 
                 }
-
-                //Rotate
-                if (Input.GetKeyDown(KeyCode.R))
-                {
-                    dir = BuildingPart.GetNextDir(dir);
-                    Debug.Log(dir);
-                }
-
-                //Change Part
-                if (Input.GetKeyDown(KeyCode.Alpha1))
-                {
-                    RefreshSelectedObjectType();
-                    currentPart = parts[0];
-                    RefreshSelectedObjectType();
-                }
-
-                if (Input.GetKeyDown(KeyCode.Alpha2))
-                {
-                    currentPart = parts[1];
-                    RefreshSelectedObjectType();
-                }
-
-
                 
             }
 
@@ -481,9 +483,20 @@ namespace PFX
         private void Instance_OnGameStateChange(object sender, System.EventArgs e)
         {
             if (GameManager.I.CurrentState == GameState.Build)
+            {
                 showGrid = true;
+            }
+            else if (GameManager.I.CurrentState == GameState.Typing || GameManager.I.CurrentState == GameState.Paused)
+            {
+                if (showGrid)
+                    showGrid = true;
+                else if (!showGrid)
+                    showGrid = false;
+            }
             else
+            {
                 showGrid = false;
+            }
         }
 
         private void Instance_OnBuildStateChange(object sender, System.EventArgs e)

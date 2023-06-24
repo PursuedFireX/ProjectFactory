@@ -46,21 +46,23 @@ namespace PFX
 
         private void Update()
         {
+            if (GameManager.I.CurrentState != GameState.Typing && GameManager.I.CurrentState != GameState.Paused)
+            {
+                KeyboardMovement();
+                KeyboardRotation();
+                ScrollRotation();
 
-            KeyboardMovement();
-            KeyboardRotation();
-            ScrollRotation();
+                if (useEdgeScrolling)
+                    EdgeScrolling();
 
-            if(useEdgeScrolling)
-                EdgeScrolling();
-
-            DragPanMovement();
-            if (useZoomFOV)
-                ZoomFOV();
-            else if (inputs.HoldShift())
-                ZoomLowerY();
-            else
-                ZoomDistance();
+                DragPanMovement();
+                if (useZoomFOV)
+                    ZoomFOV();
+                else if (inputs.HoldShift())
+                    ZoomLowerY();
+                else
+                    ZoomDistance();
+            }
         }
 
         //Keyboard Controls

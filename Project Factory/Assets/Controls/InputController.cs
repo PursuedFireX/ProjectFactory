@@ -89,6 +89,33 @@ public partial class @InputController: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleDebugConsole"",
+                    ""type"": ""Button"",
+                    ""id"": ""27bc881e-969a-4099-a67c-bee9398ef4b4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleDebugOverlay"",
+                    ""type"": ""Button"",
+                    ""id"": ""1b7ed845-7ef0-4da1-8439-6523739f0453"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Enter"",
+                    ""type"": ""Button"",
+                    ""id"": ""c50c86fe-5891-43c3-b6df-1c50ded40a12"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -234,6 +261,50 @@ public partial class @InputController: IInputActionCollection2, IDisposable
                     ""action"": ""Shift"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b002f413-fe2e-4f3b-ac86-06fac485662c"",
+                    ""path"": ""<Keyboard>/backquote"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleDebugConsole"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ce28a08c-e65b-4392-ae52-0f9a38eeab59"",
+                    ""path"": ""<Keyboard>/slash"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleDebugConsole"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""76871502-68ca-4792-857f-d227cae86231"",
+                    ""path"": ""<Keyboard>/slash"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleDebugOverlay"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f5468be9-e9c6-4cf0-917a-275f9d86feea"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Enter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -249,6 +320,9 @@ public partial class @InputController: IInputActionCollection2, IDisposable
         m_Player_LeftMouseButton = m_Player.FindAction("LeftMouseButton", throwIfNotFound: true);
         m_Player_MiddleMouseButton = m_Player.FindAction("MiddleMouseButton", throwIfNotFound: true);
         m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
+        m_Player_ToggleDebugConsole = m_Player.FindAction("ToggleDebugConsole", throwIfNotFound: true);
+        m_Player_ToggleDebugOverlay = m_Player.FindAction("ToggleDebugOverlay", throwIfNotFound: true);
+        m_Player_Enter = m_Player.FindAction("Enter", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -317,6 +391,9 @@ public partial class @InputController: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_LeftMouseButton;
     private readonly InputAction m_Player_MiddleMouseButton;
     private readonly InputAction m_Player_Shift;
+    private readonly InputAction m_Player_ToggleDebugConsole;
+    private readonly InputAction m_Player_ToggleDebugOverlay;
+    private readonly InputAction m_Player_Enter;
     public struct PlayerActions
     {
         private @InputController m_Wrapper;
@@ -328,6 +405,9 @@ public partial class @InputController: IInputActionCollection2, IDisposable
         public InputAction @LeftMouseButton => m_Wrapper.m_Player_LeftMouseButton;
         public InputAction @MiddleMouseButton => m_Wrapper.m_Player_MiddleMouseButton;
         public InputAction @Shift => m_Wrapper.m_Player_Shift;
+        public InputAction @ToggleDebugConsole => m_Wrapper.m_Player_ToggleDebugConsole;
+        public InputAction @ToggleDebugOverlay => m_Wrapper.m_Player_ToggleDebugOverlay;
+        public InputAction @Enter => m_Wrapper.m_Player_Enter;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -358,6 +438,15 @@ public partial class @InputController: IInputActionCollection2, IDisposable
             @Shift.started += instance.OnShift;
             @Shift.performed += instance.OnShift;
             @Shift.canceled += instance.OnShift;
+            @ToggleDebugConsole.started += instance.OnToggleDebugConsole;
+            @ToggleDebugConsole.performed += instance.OnToggleDebugConsole;
+            @ToggleDebugConsole.canceled += instance.OnToggleDebugConsole;
+            @ToggleDebugOverlay.started += instance.OnToggleDebugOverlay;
+            @ToggleDebugOverlay.performed += instance.OnToggleDebugOverlay;
+            @ToggleDebugOverlay.canceled += instance.OnToggleDebugOverlay;
+            @Enter.started += instance.OnEnter;
+            @Enter.performed += instance.OnEnter;
+            @Enter.canceled += instance.OnEnter;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -383,6 +472,15 @@ public partial class @InputController: IInputActionCollection2, IDisposable
             @Shift.started -= instance.OnShift;
             @Shift.performed -= instance.OnShift;
             @Shift.canceled -= instance.OnShift;
+            @ToggleDebugConsole.started -= instance.OnToggleDebugConsole;
+            @ToggleDebugConsole.performed -= instance.OnToggleDebugConsole;
+            @ToggleDebugConsole.canceled -= instance.OnToggleDebugConsole;
+            @ToggleDebugOverlay.started -= instance.OnToggleDebugOverlay;
+            @ToggleDebugOverlay.performed -= instance.OnToggleDebugOverlay;
+            @ToggleDebugOverlay.canceled -= instance.OnToggleDebugOverlay;
+            @Enter.started -= instance.OnEnter;
+            @Enter.performed -= instance.OnEnter;
+            @Enter.canceled -= instance.OnEnter;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -409,5 +507,8 @@ public partial class @InputController: IInputActionCollection2, IDisposable
         void OnLeftMouseButton(InputAction.CallbackContext context);
         void OnMiddleMouseButton(InputAction.CallbackContext context);
         void OnShift(InputAction.CallbackContext context);
+        void OnToggleDebugConsole(InputAction.CallbackContext context);
+        void OnToggleDebugOverlay(InputAction.CallbackContext context);
+        void OnEnter(InputAction.CallbackContext context);
     }
 }

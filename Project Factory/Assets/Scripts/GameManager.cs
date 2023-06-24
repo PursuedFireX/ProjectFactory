@@ -10,6 +10,7 @@ namespace PFX
         public static GameManager I { get; private set; }
 
         public GameState CurrentState;
+        public GameState prevState;
         public event EventHandler OnGameStateChange;
         public event EventHandler OnBuildStateChange;
 
@@ -26,35 +27,46 @@ namespace PFX
         {
             CurrentState = GameState.Free;
             currentBuildState = BuildState.Build;
+            prevState = CurrentState;
             CheckForBuildStateUpdate();
+            CheckForGameStateUpdate();
+            
         }
 
         private void Update()
         {
-            if(Input.GetKeyDown(KeyCode.G))
+            if (CurrentState != GameState.Typing)
             {
-                if (CurrentState == GameState.Free)
-                    CurrentState = GameState.Build;
-                else if (CurrentState == GameState.Build)
-                    CurrentState = GameState.Free;
+                if (Input.GetKeyDown(KeyCode.G))
+                {
+                    if (prevState == CurrentState)
+                        UpdateGameState(GameState.Build);
+                    else
+                        UpdateGameState(prevState);
+                }
 
-                CheckForGameStateUpdate();
+                //Toggle Build State
+                if (Input.GetKeyDown(KeyCode.B))
+                {
+                    if (currentBuildState == BuildState.Build)
+                        currentBuildState = BuildState.Component;
+                    else if (currentBuildState == BuildState.Component)
+                        currentBuildState = BuildState.Destroy;
+                    else if (currentBuildState == BuildState.Destroy)
+                        currentBuildState = BuildState.Build;
+
+                    CheckForBuildStateUpdate();
+                }
             }
-
-            //Toggle Build State
-            if (Input.GetKeyDown(KeyCode.B))
-            {
-                if (currentBuildState == BuildState.Build)
-                    currentBuildState = BuildState.Component;
-                else if (currentBuildState == BuildState.Component)
-                    currentBuildState = BuildState.Destroy;
-                else if (currentBuildState == BuildState.Destroy)
-                    currentBuildState = BuildState.Build;
-
-                CheckForBuildStateUpdate();
-            }
-
         }
+
+        public void UpdateGameState(GameState newState)
+        {
+            prevState = CurrentState;
+            CurrentState = newState;
+            CheckForGameStateUpdate();
+        }
+
 
         private void CheckForGameStateUpdate()
         {
@@ -78,5 +90,7 @@ namespace PFX
     {
         Free,
         Build,
+        Typing,
+        Paused,
     }
 }

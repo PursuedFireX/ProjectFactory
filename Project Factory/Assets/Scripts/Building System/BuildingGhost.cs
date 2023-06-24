@@ -15,17 +15,13 @@ namespace PFX
         {
             RefreshVisual();
             GridBuildingSystem.Instance.OnSelectedChanged += Instance_OnSelectedChanged;
-            GameManager.I.OnBuildStateChange += Instance_OnBuildStateChange;
+            GameManager.I.OnBuildStateChange += Instance_OnSelectedChanged;
+            GameManager.I.OnGameStateChange += Instance_OnSelectedChanged;
 
         }
 
 
         private void Instance_OnSelectedChanged(object sender, System.EventArgs e)
-        {
-            RefreshVisual();
-        }
-
-        private void Instance_OnBuildStateChange(object sender, System.EventArgs e)
         {
             RefreshVisual();
         }
@@ -46,10 +42,13 @@ namespace PFX
 
         private void RefreshVisual()
         {
-            if (GameManager.I.currentBuildState == BuildState.Component)
+            if (GameManager.I.currentBuildState == BuildState.Component || GameManager.I.CurrentState != GameState.Build)
             {
-                Destroy(visual.gameObject);
-                visual = null;
+                if (visual != null)
+                {
+                    Destroy(visual.gameObject);
+                    visual = null;
+                }
             }
             else
             {
