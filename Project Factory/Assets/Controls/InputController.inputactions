@@ -69,9 +69,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ToggleDebugConsole",
+                    "name": "ToggleChatConsole",
                     "type": "Button",
                     "id": "27bc881e-969a-4099-a67c-bee9398ef4b4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "DebugChat",
+                    "type": "Button",
+                    "id": "1bb7cb3b-c5c7-424b-a9d0-0b281e5d2da3",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -90,6 +99,15 @@
                     "name": "Enter",
                     "type": "Button",
                     "id": "c50c86fe-5891-43c3-b6df-1c50ded40a12",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TextChat",
+                    "type": "Button",
+                    "id": "1fd83f6b-0beb-4c22-b793-ce96cc99e248",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -247,18 +265,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ToggleDebugConsole",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ce28a08c-e65b-4392-ae52-0f9a38eeab59",
-                    "path": "<Keyboard>/slash",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ToggleDebugConsole",
+                    "action": "ToggleChatConsole",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -281,6 +288,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Enter",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0a36881b-ba72-4c7b-b4a9-00a0f00d32c9",
+                    "path": "<Keyboard>/slash",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DebugChat",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8b8716fb-39a8-443a-abc3-539464a5d176",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TextChat",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

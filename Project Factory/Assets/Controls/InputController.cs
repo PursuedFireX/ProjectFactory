@@ -91,9 +91,18 @@ public partial class @InputController: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ToggleDebugConsole"",
+                    ""name"": ""ToggleChatConsole"",
                     ""type"": ""Button"",
                     ""id"": ""27bc881e-969a-4099-a67c-bee9398ef4b4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DebugChat"",
+                    ""type"": ""Button"",
+                    ""id"": ""1bb7cb3b-c5c7-424b-a9d0-0b281e5d2da3"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -112,6 +121,15 @@ public partial class @InputController: IInputActionCollection2, IDisposable
                     ""name"": ""Enter"",
                     ""type"": ""Button"",
                     ""id"": ""c50c86fe-5891-43c3-b6df-1c50ded40a12"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TextChat"",
+                    ""type"": ""Button"",
+                    ""id"": ""1fd83f6b-0beb-4c22-b793-ce96cc99e248"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -269,18 +287,7 @@ public partial class @InputController: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ToggleDebugConsole"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""ce28a08c-e65b-4392-ae52-0f9a38eeab59"",
-                    ""path"": ""<Keyboard>/slash"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ToggleDebugConsole"",
+                    ""action"": ""ToggleChatConsole"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -305,6 +312,28 @@ public partial class @InputController: IInputActionCollection2, IDisposable
                     ""action"": ""Enter"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0a36881b-ba72-4c7b-b4a9-00a0f00d32c9"",
+                    ""path"": ""<Keyboard>/slash"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DebugChat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8b8716fb-39a8-443a-abc3-539464a5d176"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TextChat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -320,9 +349,11 @@ public partial class @InputController: IInputActionCollection2, IDisposable
         m_Player_LeftMouseButton = m_Player.FindAction("LeftMouseButton", throwIfNotFound: true);
         m_Player_MiddleMouseButton = m_Player.FindAction("MiddleMouseButton", throwIfNotFound: true);
         m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
-        m_Player_ToggleDebugConsole = m_Player.FindAction("ToggleDebugConsole", throwIfNotFound: true);
+        m_Player_ToggleChatConsole = m_Player.FindAction("ToggleChatConsole", throwIfNotFound: true);
+        m_Player_DebugChat = m_Player.FindAction("DebugChat", throwIfNotFound: true);
         m_Player_ToggleDebugOverlay = m_Player.FindAction("ToggleDebugOverlay", throwIfNotFound: true);
         m_Player_Enter = m_Player.FindAction("Enter", throwIfNotFound: true);
+        m_Player_TextChat = m_Player.FindAction("TextChat", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -391,9 +422,11 @@ public partial class @InputController: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_LeftMouseButton;
     private readonly InputAction m_Player_MiddleMouseButton;
     private readonly InputAction m_Player_Shift;
-    private readonly InputAction m_Player_ToggleDebugConsole;
+    private readonly InputAction m_Player_ToggleChatConsole;
+    private readonly InputAction m_Player_DebugChat;
     private readonly InputAction m_Player_ToggleDebugOverlay;
     private readonly InputAction m_Player_Enter;
+    private readonly InputAction m_Player_TextChat;
     public struct PlayerActions
     {
         private @InputController m_Wrapper;
@@ -405,9 +438,11 @@ public partial class @InputController: IInputActionCollection2, IDisposable
         public InputAction @LeftMouseButton => m_Wrapper.m_Player_LeftMouseButton;
         public InputAction @MiddleMouseButton => m_Wrapper.m_Player_MiddleMouseButton;
         public InputAction @Shift => m_Wrapper.m_Player_Shift;
-        public InputAction @ToggleDebugConsole => m_Wrapper.m_Player_ToggleDebugConsole;
+        public InputAction @ToggleChatConsole => m_Wrapper.m_Player_ToggleChatConsole;
+        public InputAction @DebugChat => m_Wrapper.m_Player_DebugChat;
         public InputAction @ToggleDebugOverlay => m_Wrapper.m_Player_ToggleDebugOverlay;
         public InputAction @Enter => m_Wrapper.m_Player_Enter;
+        public InputAction @TextChat => m_Wrapper.m_Player_TextChat;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -438,15 +473,21 @@ public partial class @InputController: IInputActionCollection2, IDisposable
             @Shift.started += instance.OnShift;
             @Shift.performed += instance.OnShift;
             @Shift.canceled += instance.OnShift;
-            @ToggleDebugConsole.started += instance.OnToggleDebugConsole;
-            @ToggleDebugConsole.performed += instance.OnToggleDebugConsole;
-            @ToggleDebugConsole.canceled += instance.OnToggleDebugConsole;
+            @ToggleChatConsole.started += instance.OnToggleChatConsole;
+            @ToggleChatConsole.performed += instance.OnToggleChatConsole;
+            @ToggleChatConsole.canceled += instance.OnToggleChatConsole;
+            @DebugChat.started += instance.OnDebugChat;
+            @DebugChat.performed += instance.OnDebugChat;
+            @DebugChat.canceled += instance.OnDebugChat;
             @ToggleDebugOverlay.started += instance.OnToggleDebugOverlay;
             @ToggleDebugOverlay.performed += instance.OnToggleDebugOverlay;
             @ToggleDebugOverlay.canceled += instance.OnToggleDebugOverlay;
             @Enter.started += instance.OnEnter;
             @Enter.performed += instance.OnEnter;
             @Enter.canceled += instance.OnEnter;
+            @TextChat.started += instance.OnTextChat;
+            @TextChat.performed += instance.OnTextChat;
+            @TextChat.canceled += instance.OnTextChat;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -472,15 +513,21 @@ public partial class @InputController: IInputActionCollection2, IDisposable
             @Shift.started -= instance.OnShift;
             @Shift.performed -= instance.OnShift;
             @Shift.canceled -= instance.OnShift;
-            @ToggleDebugConsole.started -= instance.OnToggleDebugConsole;
-            @ToggleDebugConsole.performed -= instance.OnToggleDebugConsole;
-            @ToggleDebugConsole.canceled -= instance.OnToggleDebugConsole;
+            @ToggleChatConsole.started -= instance.OnToggleChatConsole;
+            @ToggleChatConsole.performed -= instance.OnToggleChatConsole;
+            @ToggleChatConsole.canceled -= instance.OnToggleChatConsole;
+            @DebugChat.started -= instance.OnDebugChat;
+            @DebugChat.performed -= instance.OnDebugChat;
+            @DebugChat.canceled -= instance.OnDebugChat;
             @ToggleDebugOverlay.started -= instance.OnToggleDebugOverlay;
             @ToggleDebugOverlay.performed -= instance.OnToggleDebugOverlay;
             @ToggleDebugOverlay.canceled -= instance.OnToggleDebugOverlay;
             @Enter.started -= instance.OnEnter;
             @Enter.performed -= instance.OnEnter;
             @Enter.canceled -= instance.OnEnter;
+            @TextChat.started -= instance.OnTextChat;
+            @TextChat.performed -= instance.OnTextChat;
+            @TextChat.canceled -= instance.OnTextChat;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -507,8 +554,10 @@ public partial class @InputController: IInputActionCollection2, IDisposable
         void OnLeftMouseButton(InputAction.CallbackContext context);
         void OnMiddleMouseButton(InputAction.CallbackContext context);
         void OnShift(InputAction.CallbackContext context);
-        void OnToggleDebugConsole(InputAction.CallbackContext context);
+        void OnToggleChatConsole(InputAction.CallbackContext context);
+        void OnDebugChat(InputAction.CallbackContext context);
         void OnToggleDebugOverlay(InputAction.CallbackContext context);
         void OnEnter(InputAction.CallbackContext context);
+        void OnTextChat(InputAction.CallbackContext context);
     }
 }

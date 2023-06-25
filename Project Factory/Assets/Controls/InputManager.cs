@@ -99,9 +99,19 @@ namespace PFX
             return inputs.Player.Shift.IsPressed();
         }
 
-        public bool ToggleDebugConsole()
+        public bool ToggleChatConsole()
         {
-            return inputs.Player.ToggleDebugConsole.triggered;
+            return inputs.Player.ToggleChatConsole.triggered;
+        }
+
+        public bool OpenChat()
+        {
+            return inputs.Player.TextChat.triggered;
+        }
+
+        public bool OpenDebugChat()
+        {
+            return inputs.Player.DebugChat.triggered;
         }
 
         public bool ToggleDebugOverlay()

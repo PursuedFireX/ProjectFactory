@@ -16,6 +16,7 @@ namespace PFX
 
         public float currentPower;
         public BuildState currentBuildState;
+        public Transform UITransform;
 
 
         private void Awake()
