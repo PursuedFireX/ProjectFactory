@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 429005148320008497}
   - component: {fileID: 7503185542985412284}
   - component: {fileID: 4114087379361930555}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ConnectionPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

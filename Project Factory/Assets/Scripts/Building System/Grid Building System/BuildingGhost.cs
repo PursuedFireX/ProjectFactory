@@ -7,14 +7,14 @@ namespace PFX
     public class BuildingGhost : MonoBehaviour
     {
         private Transform visual;
-        private BuildingPart part;
+        private BuildingPartData part;
         [SerializeField] private Material ghostMat;
 
 
         private void Start()
         {
             RefreshVisual();
-            GridBuildingSystem.Instance.OnSelectedChanged += Instance_OnSelectedChanged;
+            BuildingManager.I.OnSelectedChanged += Instance_OnSelectedChanged;
             GameManager.I.OnBuildStateChange += Instance_OnSelectedChanged;
             GameManager.I.OnGameStateChange += Instance_OnSelectedChanged;
 
@@ -58,7 +58,7 @@ namespace PFX
                     visual = null;
                 }
 
-                BuildingPart currentPart = GridBuildingSystem.Instance.GetCurrentPart();
+                BuildingPartData currentPart = BuildingManager.I.currentPart;
 
                 if (currentPart != null)
                 {

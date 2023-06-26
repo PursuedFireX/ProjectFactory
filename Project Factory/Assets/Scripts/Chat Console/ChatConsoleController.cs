@@ -53,7 +53,7 @@ namespace PFX
 
             if(Input.GetKeyDown(KeyCode.V))
             {
-                ChatPopup.Create(chatPopPos, "Boop", chatFadeTime, chatFadeSpd, errorColor);
+                Popup.Create(chatPopPos, "Boop", chatFadeTime, chatFadeSpd, errorColor, false, true);
             }
 
 
@@ -124,7 +124,7 @@ namespace PFX
             chatMessage.textObject.text = text;
             chatMessage.textObject.color = textColor;
 
-            ChatPopup.Create(chatPopPos, text, chatFadeTime, chatFadeSpd, textColor);
+            Popup.Create(chatPopPos, text, chatFadeTime, chatFadeSpd, textColor, false, true);
             chatLog.Add(chatMessage);
         }
 
@@ -180,4 +180,24 @@ namespace PFX
         public string text;
         public TMP_Text textObject;
     }
+
+    public static class Console
+    {
+        public static void SendChat(string text)
+        {
+            ChatConsoleController.I.SendChat(text, ChatConsoleController.I.textColor);
+        }
+
+        public static void SendDebug(string text)
+        {
+            ChatConsoleController.I.SendChat("Console: " + text, ChatConsoleController.I.textColor);
+            Debug.Log(text);
+        }
+
+        public static void SendError(string text)
+        {
+            ChatConsoleController.I.SendChat(text, ChatConsoleController.I.errorColor);
+        }
+    }
+
 }

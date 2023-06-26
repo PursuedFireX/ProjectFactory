@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace PFX
@@ -18,6 +16,8 @@ namespace PFX
         public BuildState currentBuildState;
         public Transform UITransform;
 
+        public Transform vCam;
+
 
         private void Awake()
         {
@@ -26,6 +26,8 @@ namespace PFX
 
         private void Start()
         {
+            TimeTickSystem.Create();
+
             CurrentState = GameState.Free;
             currentBuildState = BuildState.Build;
             prevState = CurrentState;
@@ -57,14 +59,20 @@ namespace PFX
                         currentBuildState = BuildState.Build;
 
                     CheckForBuildStateUpdate();
+                    string text = "Build State = " + currentBuildState.ToString();
+                    Console.SendDebug(text);
                 }
             }
         }
+
+
 
         public void UpdateGameState(GameState newState)
         {
             prevState = CurrentState;
             CurrentState = newState;
+            string text = "Game State = " + newState.ToString();
+            Console.SendDebug(text);
             CheckForGameStateUpdate();
         }
 

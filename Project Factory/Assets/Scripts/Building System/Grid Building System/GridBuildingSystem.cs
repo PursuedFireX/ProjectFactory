@@ -10,12 +10,8 @@ namespace PFX
 
         public static GridBuildingSystem Instance { get; private set; }
 
-        public event EventHandler OnSelectedChanged;
-
-        public List<BuildingPart> parts;
-        public BuildingPart currentPart;
         private Grid3D<GridObject> grid;
-        private BuildingPart.Dir dir = BuildingPart.Dir.Down;
+        private BuildingPartData.Dir dir = BuildingPartData.Dir.Down;
         public bool isDragging;
         public LayerMask buildLayers;
 
@@ -43,11 +39,13 @@ namespace PFX
 
         public BuildState buildState;
 
+        private BuildingManager buildingManager;
+
         private void Awake()
         {
             Instance = this;
             grid = new Grid3D<GridObject>(gridWidth, gridHeight, cellSize, Vector3.zero, (Grid3D<GridObject> g, int x, int z) => new GridObject(g, x, z, this), showGrid, showGridDebug);
-            currentPart = parts[0];
+
 
             gridLines.transform.position = new Vector3(grid.GetGridOrigin().x, .01f, grid.GetGridOrigin().z);
             gridLines.transform.localScale = new Vector3(gridWidth / cellSize, 1, gridHeight / cellSize);
@@ -59,6 +57,7 @@ namespace PFX
 
         private void Start()
         {
+            buildingManager = BuildingManager.I;
             GameManager.I.OnGameStateChange += Instance_OnGameStateChange;
             GameManager.I.OnBuildStateChange += Instance_OnBuildStateChange;
         }
@@ -71,13 +70,13 @@ namespace PFX
                 if (buildState == BuildState.Build || buildState == BuildState.Destroy)
                 {
                     HandleGhostMaterialColor();
-                    BuildingPart.Dir prevDir = dir;
+                    BuildingPartData.Dir prevDir = dir;
 
                     if (InputManager.I.LeftMouseClick())
                     {
-                        if (currentPart.partType == BuildingPart.PartType.Foundation)
+                        if (buildingManager.currentPart.partType == BuildingPartData.PartType.Foundation)
                         {
-                            dir = BuildingPart.Dir.Down;
+                            dir = BuildingPartData.Dir.Down;
                         }
                         grid.GetXZ(Mouse3D.GetMouseWorldPosition(), out int x, out int z);
                         if (grid.GetGridObject(x, z) != null)
@@ -90,7 +89,6 @@ namespace PFX
                         else
                         {
                             canDragBuild = false;
-                            Debug.Log("Out of building bounds.");
                         }
                     }
 
@@ -99,19 +97,19 @@ namespace PFX
 
                     if (InputManager.I.LeftMouseClick(true))
                     {
-                        if (grid.GetGridObject(GetMouseWorldSnappedPosition()).GetCellPosition() != startCell.GetCellPosition())
+                        if (startCell != null && grid.GetGridObject(GetMouseWorldSnappedPosition()) != null)
                         {
-                            isDragging = true;
-                        }
-                        else
-                        {
-                            isDragging = false;
-                        }
-
-                        if (startCell != null)
-                        {
+                            if (grid.GetGridObject(GetMouseWorldSnappedPosition()).GetCellPosition() != startCell.GetCellPosition())
+                            {
+                                isDragging = true;
+                            }
+                            else
+                            {
+                                isDragging = false;
+                            }
                             HandleBoxSelection();
                         }
+                            
                     }
 
                     if (InputManager.I.LeftMouseRelease())
@@ -131,7 +129,10 @@ namespace PFX
                             }
                         }
                         else
+                        {
+                            Popup.Create(Mouse3D.GetMouseWorldPosition(), "Out of building bounds", 1, 3, Color.white, true);
                             Debug.Log("Out of building bounds.");
+                        }
 
                         dir = prevDir;
 
@@ -144,18 +145,16 @@ namespace PFX
                                 PlacedObject po = hit.transform.GetComponentInParent<PlacedObject>();
                                 if (po != null)
                                 {
-                                    Debug.Log(po);
 
                                     GridObject go = grid.GetGridObject(x, z);
                                     if (go != null)
                                     {
-                                        if (po.GetPartType() == BuildingPart.PartType.Foundation)
+                                        if (po.GetPartType() == BuildingPartData.PartType.Foundation)
                                         {
-                                            Debug.Log("Floor");
                                             go.ClearPlacedObject();
                                             po.DestroySelf();
                                         }
-                                        else if (po.GetPartType() == BuildingPart.PartType.Edge)
+                                        else if (po.GetPartType() == BuildingPartData.PartType.Edge)
                                         {
                                             go.ClearEdgeObject(po.GetEdge());
                                             po.DestroySelf();
@@ -171,23 +170,10 @@ namespace PFX
                     //Rotate
                     if (Input.GetKeyDown(KeyCode.R))
                     {
-                        dir = BuildingPart.GetNextDir(dir);
-                        Debug.Log(dir);
+                        dir = BuildingPartData.GetNextDir(dir);
                     }
 
-                    //Change Part
-                    if (Input.GetKeyDown(KeyCode.Alpha1))
-                    {
-                        RefreshSelectedObjectType();
-                        currentPart = parts[0];
-                        RefreshSelectedObjectType();
-                    }
-
-                    if (Input.GetKeyDown(KeyCode.Alpha2))
-                    {
-                        currentPart = parts[1];
-                        RefreshSelectedObjectType();
-                    }
+                    
 
                 }
                 
@@ -230,9 +216,9 @@ namespace PFX
             Vector3 mousePosition = Mouse3D.GetMouseWorldPosition();
             grid.GetXZ(mousePosition, out int x, out int z);
 
-            if (currentPart != null)
+            if (buildingManager.currentPart != null)
             {
-                Vector2Int rotationOffset = currentPart.GetRotationOffset(dir);
+                Vector2Int rotationOffset = buildingManager.currentPart.GetRotationOffset(dir);
                 Vector3 placedObjectWorldPosition = grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, -1, rotationOffset.y) * grid.GetCellSize();
                 return placedObjectWorldPosition;
             }
@@ -244,9 +230,9 @@ namespace PFX
 
         public Quaternion GetPlacedObjectRotation()
         {
-            if (currentPart != null)
+            if (buildingManager.currentPart != null)
             {
-                return Quaternion.Euler(0, currentPart.GetRotationAngle(dir), 0);
+                return Quaternion.Euler(0, buildingManager.currentPart.GetRotationAngle(dir), 0);
             }
             else
             {
@@ -254,10 +240,7 @@ namespace PFX
             }
         }
 
-        public BuildingPart GetCurrentPart()
-        {
-            return currentPart;
-        }
+        
 
         private void PlacementHandler()
         {
@@ -387,7 +370,7 @@ namespace PFX
         private void PlaceObject(int x, int z, GridObject go)
         {
 
-            List<Vector2Int> gridPositionList = currentPart.GetGridPositionList(new Vector2Int(x, z), dir);
+            List<Vector2Int> gridPositionList = buildingManager.currentPart.GetGridPositionList(new Vector2Int(x, z), dir);
 
             bool canBuild = true;
             #region CanBuild check
@@ -410,11 +393,11 @@ namespace PFX
 
             if (canBuild)
             {
-                Vector2Int rotationOffset = currentPart.GetRotationOffset(dir);
+                Vector2Int rotationOffset = buildingManager.currentPart.GetRotationOffset(dir);
                 Vector3 placePosition = grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
 
 
-                PlacedObject po = PlacedObject.Create(placePosition, new Vector2Int(x, z), dir, currentPart);
+                PlacedObject po = PlacedObject.Create(placePosition, new Vector2Int(x, z), dir, buildingManager.currentPart);
                 foreach (Vector2Int gridPosition in gridPositionList)
                 {
                     grid.GetGridObject(gridPosition.x, gridPosition.y).SetPlacedObject(po);
@@ -422,6 +405,7 @@ namespace PFX
             }
             else
             {
+                Popup.Create(Mouse3D.GetMouseWorldPosition(), "Cant build here", 1, 3, Color.white, true);
                 Debug.Log("Can't build here.");
             }
             
@@ -447,15 +431,12 @@ namespace PFX
             }
         }
 
-        public BuildingPart.Dir GetDir()
+        public BuildingPartData.Dir GetDir()
         {
             return dir;
         }
 
-        private void RefreshSelectedObjectType()
-        {
-            OnSelectedChanged?.Invoke(this, EventArgs.Empty);
-        }
+        
 
         private void HandleGhostMaterialColor()
         {
@@ -465,7 +446,7 @@ namespace PFX
             {
                 if (buildState == BuildState.Build)
                 {
-                    if (currentPart.partType == BuildingPart.PartType.Foundation)
+                    if (buildingManager.currentPart.partType == BuildingPartData.PartType.Foundation)
                     {
                         if (currentCell.GetPlacedObject() == null)
                             ghostMat.color = placeColor;
@@ -575,25 +556,25 @@ namespace PFX
             public PlacedObject GetPlacedObject()
             {
 
-                switch(GridBuildingSystem.Instance.currentPart.partType)
+                switch(BuildingManager.I.currentPart.partType)
                 {
-                    case BuildingPart.PartType.Foundation: return placedObject;
+                    case BuildingPartData.PartType.Foundation: return placedObject;
 
-                    case BuildingPart.PartType.Edge:
+                    case BuildingPartData.PartType.Edge:
                         switch (gbs.dir)
                         {
-                            case BuildingPart.Dir.Up:
+                            case BuildingPartData.Dir.Up:
                                 return topSlot;
-                            case BuildingPart.Dir.Down:
+                            case BuildingPartData.Dir.Down:
                                 return bottomSlot;
-                            case BuildingPart.Dir.Left:
+                            case BuildingPartData.Dir.Left:
                                 return leftSlot;
-                            case BuildingPart.Dir.Right:
+                            case BuildingPartData.Dir.Right:
                                 return rightSlot;
                         }
                         break;
 
-                    case BuildingPart.PartType.Component: return placedComponent;
+                    case BuildingPartData.PartType.Component: return placedComponent;
                 }
 
 
@@ -663,25 +644,25 @@ namespace PFX
 
             public bool CanBuid()
             {
-                switch (GridBuildingSystem.Instance.currentPart.partType)
+                switch (BuildingManager.I.currentPart.partType)
                 {
-                    case BuildingPart.PartType.Foundation: return placedObject == null;
+                    case BuildingPartData.PartType.Foundation: return placedObject == null;
 
-                    case BuildingPart.PartType.Edge:
+                    case BuildingPartData.PartType.Edge:
                         switch (gbs.dir)
                         {
-                            case BuildingPart.Dir.Up:
+                            case BuildingPartData.Dir.Up:
                                 return topSlot == null;
-                            case BuildingPart.Dir.Down:
+                            case BuildingPartData.Dir.Down:
                                 return bottomSlot == null;
-                            case BuildingPart.Dir.Left:
+                            case BuildingPartData.Dir.Left:
                                 return leftSlot == null;
-                            case BuildingPart.Dir.Right:
+                            case BuildingPartData.Dir.Right:
                                 return rightSlot == null;
                         }
                         break;
 
-                    case BuildingPart.PartType.Component: return placedComponent == null;
+                    case BuildingPartData.PartType.Component: return placedComponent == null;
                 }
 
 

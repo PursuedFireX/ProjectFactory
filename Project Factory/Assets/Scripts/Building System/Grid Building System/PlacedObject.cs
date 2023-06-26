@@ -6,7 +6,7 @@ namespace PFX
 {
     public class PlacedObject : MonoBehaviour
     {
-        public static PlacedObject Create(Vector3 worldPos, Vector2Int origin, BuildingPart.Dir dir, BuildingPart type)
+        public static PlacedObject Create(Vector3 worldPos, Vector2Int origin, BuildingPartData.Dir dir, BuildingPartData type)
         {
             Transform buildTransform = Instantiate(type.prefab, worldPos, Quaternion.Euler(0, type.GetRotationAngle(dir), 0)).transform;
 
@@ -18,7 +18,7 @@ namespace PFX
             return placedObject;
         }
 
-        public static PlacedObject Create(Vector3 worldPos, Vector2Int origin, BuildingPart.Dir dir, BuildingPart type, GridBuildingSystem.Edge edge)
+        public static PlacedObject Create(Vector3 worldPos, Vector2Int origin, BuildingPartData.Dir dir, BuildingPartData type, GridBuildingSystem.Edge edge)
         {
             Transform buildTransform = Instantiate(type.prefab, worldPos, Quaternion.Euler(0, type.GetRotationAngle(dir), 0)).transform;
 
@@ -31,9 +31,9 @@ namespace PFX
             return placedObject;
         }
 
-        private BuildingPart type;
+        private BuildingPartData type;
         private Vector2Int origin;
-        private BuildingPart.Dir dir;
+        private BuildingPartData.Dir dir;
         private GridBuildingSystem.Edge edge;
 
         public List<Vector2Int> gridPositions()
@@ -41,7 +41,7 @@ namespace PFX
             return type.GetGridPositionList(origin, dir);
         }
 
-        public BuildingPart.PartType GetPartType()
+        public BuildingPartData.PartType GetPartType()
         {
             return type.partType;
         }

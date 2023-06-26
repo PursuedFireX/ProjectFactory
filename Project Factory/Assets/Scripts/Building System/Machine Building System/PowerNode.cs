@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace PFX
 {
-    public class ComponentObject : MonoBehaviour
+    public class PowerNode : PlacedComponent
     {
-        public ComponentData data; 
+        public float storedPower;
+        public bool connected;
     }
 }

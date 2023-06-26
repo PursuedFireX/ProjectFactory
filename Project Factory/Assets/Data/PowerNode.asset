@@ -10,12 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5a837d3dcdb0dab409c0b9f1b671e238, type: 3}
-  m_Name: TestMachine
+  m_Name: PowerNode
   m_EditorClassIdentifier: 
-  width: 1
-  height: 1
-  prefab: {fileID: 9171580948896922301, guid: 8cd5335d04dfe824aa09a3e340f2b332, type: 3}
-  visual: {fileID: 9171580948896922301, guid: 8cd5335d04dfe824aa09a3e340f2b332, type: 3}
-  partType: 2
-  draggable: 0
-  powerConsumption: 20
+  prefab: {fileID: 8339224784009501636, guid: 3a68ac98e73de204abf5c63b90477ccc, type: 3}
+  visual: {fileID: 4733445935696217666, guid: 67b377110e9335b43bc1c0a13e2ab887, type: 3}
+  isPowerNode: 1
+  powerConsumption: 0

@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace PFX
 {
-    [CreateAssetMenu(menuName = ("Data/Building Part"))]
-    public class BuildingPart : ScriptableObject
+    [CreateAssetMenu(menuName = ("Data/Building Part Data"))]
+    public class BuildingPartData : ScriptableObject
     {
         public int width;
         public int height;

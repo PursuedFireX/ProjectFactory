@@ -26,6 +26,7 @@ namespace PFX
 
         public static Vector3 GetMouseWorldPosition() => Instance.GetMouseWorldPosition_Instance();
 
+
         private Vector3 GetMouseWorldPosition_Instance()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

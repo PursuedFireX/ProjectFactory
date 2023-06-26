@@ -16,6 +16,8 @@ namespace PFX
         //Assets
         public Transform chatPopup;
         public GameObject chatMessage;
+        [Space]
+        public GameObject textPopup;
 
     }
 }

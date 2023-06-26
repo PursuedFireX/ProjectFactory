@@ -7,6 +7,11 @@ namespace PFX
     [CreateAssetMenu(menuName = ("Data/Component Data"))]
     public class ComponentData : ScriptableObject
     {
+
+        public Transform prefab;
+        public Transform visual;
+        public bool isPowerNode;
+
         public float powerConsumption;
 
     }

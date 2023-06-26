@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7270086262809746969}
   - component: {fileID: 589270798126854958}
   - component: {fileID: 5537392384968742102}
-  - component: {fileID: 1322764777561298397}
+  - component: {fileID: 3894726920824793772}
   m_Layer: 5
   m_Name: ChatPopup
   m_TagString: Untagged
@@ -78,7 +78,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1322764777561298397
+--- !u!114 &3894726920824793772
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,7 +87,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 663022054269743274}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 709a621dd35a7944e85077d4286cf11c, type: 3}
+  m_Script: {fileID: 11500000, guid: 767b828c237ed584880126743d39f618, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   textMesh: {fileID: 4921121404493429515}
