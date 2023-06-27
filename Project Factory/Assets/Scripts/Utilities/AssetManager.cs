@@ -13,11 +13,14 @@ namespace PFX
             I = this;
         }
 
-        //Assets
+        [Header("Prefabs")]
         public Transform chatPopup;
         public GameObject chatMessage;
         [Space]
         public GameObject textPopup;
+
+        [Header("Materials")]
+        public Material powerLineMat;
 
     }
 }

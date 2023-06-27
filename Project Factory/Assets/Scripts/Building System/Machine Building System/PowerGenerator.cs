@@ -4,17 +4,37 @@ using UnityEngine;
 
 namespace PFX
 {
-    public class PowerGenerator : PlacedObject
+    public class PowerGenerator : MachineBase
     {
-        private void Start()
+
+        public float powerProduced;
+
+        public override void Start()
         {
-            TimeTickSystem.OnTick += GeneratePower;
+            base.Start();
+            //TimeTickSystem.OnTick += TickHandler;
         }
 
-        private void GeneratePower(object sender, TimeTickSystem.OnTickEventArgs e)
+        public override void TickHandler(object sender, TimeTickSystem.OnTickEventArgs e)
         {
-            Console.SendDebug("Tick: " + TimeTickSystem.GetTick());
-            GameManager.I.currentPower += 30;
+            GeneratePower();
         }
+
+
+        private void GeneratePower()
+        {
+            if(powerNode != null)
+            {
+                powerNode.maxPower = 60;
+                powerNode.powerTransferRate = 4.5f;
+                if(powerNode.storedPower < powerNode.maxPower)
+                {
+                    powerNode.AddPower(powerProduced);
+                }
+            }
+            
+        }
+
+
     }
 }
