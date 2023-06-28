@@ -76,13 +76,20 @@ namespace PFX
             CheckForGameStateUpdate();
         }
 
+        public void UpdateBuildState(BuildState newState)
+        {
+            currentBuildState = newState;
+            string text = "Build State = " + newState.ToString();
+            Console.SendDebug(text);
+            CheckForBuildStateUpdate();
+        }
 
-        private void CheckForGameStateUpdate()
+        public void CheckForGameStateUpdate()
         {
             OnGameStateChange?.Invoke(this, EventArgs.Empty);
         }
 
-        private void CheckForBuildStateUpdate()
+        public void CheckForBuildStateUpdate()
         {
             OnBuildStateChange?.Invoke(this, EventArgs.Empty);
         }

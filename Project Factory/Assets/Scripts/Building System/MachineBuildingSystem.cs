@@ -34,7 +34,7 @@ namespace PFX
 
         private void Update()
         {
-            if (GameManager.I.CurrentState == GameState.Free)
+            if (GameManager.I.CurrentState == GameState.Free && !UIManager.I.mouseOverUI)
             {
                 if (InputManager.I.LeftMouseRelease())
                 {
@@ -91,7 +91,7 @@ namespace PFX
 
             }
 
-            if (ghost.isSnapped)
+            if (ghost.isSnapped && !UIManager.I.mouseOverUI)
             {
                 if (ghost.currentSnap.childCount == 0)
                 {

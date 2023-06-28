@@ -65,7 +65,7 @@ namespace PFX
 
         private void Update()
         {
-            if(GameManager.I.CurrentState == GameState.Build)
+            if(GameManager.I.CurrentState == GameState.Build && !UIManager.I.mouseOverUI)
             {
                 if (buildState == BuildState.Build || buildState == BuildState.Destroy)
                 {
