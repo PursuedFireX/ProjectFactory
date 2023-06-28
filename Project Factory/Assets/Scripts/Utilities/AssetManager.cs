@@ -14,6 +14,7 @@ namespace PFX
         }
 
         [Header("Prefabs")]
+        public GameObject cablePrefab;
         public Transform chatPopup;
         public GameObject chatMessage;
         [Space]

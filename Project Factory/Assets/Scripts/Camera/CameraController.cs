@@ -23,7 +23,7 @@ namespace PFX
         [SerializeField] private float maxFollowOffset = 50f;
 
         [SerializeField] private float minOffsetY = 10f;
-        [SerializeField] private float maxOffsetY = 50f;
+        [SerializeField] private float maxOffsetY = 14f;
 
         [SerializeField] private bool useZoomFOV;
 
@@ -136,7 +136,6 @@ namespace PFX
 
         private void ScrollRotation()
         {
-            Vector3 dir = new Vector3(0, 0, 0);
 
             if (inputs.MiddleMouseClick())
             {
@@ -150,13 +149,15 @@ namespace PFX
             if (scrollRotateActive)
             {
                 Vector2 mouseMoveDelta = (Vector2)Input.mousePosition - lastMousePos;
+
                 float rotationDirY = 0;
+
                 if (mouseMoveDelta.x > 0)
                     rotationDirY = 1f;
                 else if (mouseMoveDelta.x < 0)
                     rotationDirY = -1f;
 
-                transform.eulerAngles += new Vector3(0, rotationDirY * rotSpd * Time.deltaTime,0);
+                transform.eulerAngles += new Vector3(0, rotationDirY * rotSpd * Time.deltaTime, 0);
 
                 lastMousePos = Input.mousePosition;
             }

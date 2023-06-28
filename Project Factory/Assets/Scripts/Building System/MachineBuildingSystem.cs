@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NOT_Lonely;
 
 namespace PFX
 {
@@ -17,7 +18,7 @@ namespace PFX
 
         public PowerNode currentSelectedNode;
         private bool isConnecting;
-        private LineRenderer lr;
+        private Cable currentCable;
 
         private void Awake()
         {
@@ -28,6 +29,7 @@ namespace PFX
         {
             buildingManager = BuildingManager.I;
             ghost = buildingManager.componentGhost.GetComponent<ComponentGhost>();
+
         }
 
         private void Update()
@@ -46,19 +48,17 @@ namespace PFX
                             if (!isConnecting)
                             {
                                 currentSelectedNode = hit.transform.GetComponent<PowerNode>();
-                                lr = currentSelectedNode.transform.gameObject.AddComponent<LineRenderer>();
-                                lr.startWidth = .1f;
-                                lr.endWidth = .1f;
-                                lr.material = AssetManager.I.powerLineMat;
-                                lr.SetPosition(0, currentSelectedNode.transform.position);
-                                lr.SetPosition(1, currentSelectedNode.transform.position);
                                 isConnecting = true;
+                                currentCable = Instantiate(AssetManager.I.cablePrefab, hit.transform.position, Quaternion.identity).GetComponent<Cable>();
+                                currentCable.StartLine(hit.transform);
+
                             }
                             else if(isConnecting)
                             {
                                 currentSelectedNode.connectedNodes.Add(hit.transform.GetComponent<PowerNode>());
                                 hit.transform.GetComponent<PowerNode>().connectedNodes.Add(currentSelectedNode);
-                                lr.SetPosition(1, hit.transform.position);
+                                currentCable.EndLine(hit.transform);
+                                currentCable = null;
                                 currentSelectedNode = null;
                                 isConnecting = false;
                             }
