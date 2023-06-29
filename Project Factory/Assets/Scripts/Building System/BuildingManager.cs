@@ -14,38 +14,31 @@ namespace PFX
         public GameObject componentGhost;
         public GameObject buildingGhost;
 
-
-
-        public List<BuildingPartData> parts;
+        public BuildingPartData startingPart;
         [HideInInspector] public BuildingPartData currentPart;
-
-        public List<ComponentData> components;
+        public ComponentData startingComponent;
         [HideInInspector] public ComponentData currentComponent;
 
         private void Awake()
         {
             I = this;
-            currentPart = parts[0];
-            currentComponent = components[0];
+            currentPart = startingPart;
+            currentComponent = startingComponent;
         }
 
-        private void Update()
+        public void UpdateSelectedPart(ItemData item)
         {
-            //Change Part
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+            if (item.GetType() == typeof(BuildingPartData))
             {
-                RefreshSelectedObjectType();
-                currentPart = parts[0];
-                RefreshSelectedObjectType();
+                currentPart = (BuildingPartData)item;
+            }
+            else if (item.GetType() == typeof(ComponentData))
+            {
+                currentComponent = (ComponentData)item;
             }
 
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                currentPart = parts[1];
-                RefreshSelectedObjectType();
-            }
+            RefreshSelectedObjectType();
         }
-
 
         private void RefreshSelectedObjectType()
         {

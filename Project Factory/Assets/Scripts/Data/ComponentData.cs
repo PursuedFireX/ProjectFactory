@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PFX
 {
     [CreateAssetMenu(menuName = ("Data/Component Data"))]
-    public class ComponentData : ScriptableObject
+    public class ComponentData : ItemData
     {
 
         public Transform prefab;

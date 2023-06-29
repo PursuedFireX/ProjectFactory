@@ -33,39 +33,8 @@ namespace PFX
             prevState = CurrentState;
             CheckForBuildStateUpdate();
             CheckForGameStateUpdate();
-            
+
         }
-
-        private void Update()
-        {
-            if (CurrentState != GameState.Typing)
-            {
-                if (Input.GetKeyDown(KeyCode.G))
-                {
-                    if (prevState == CurrentState)
-                        UpdateGameState(GameState.Build);
-                    else
-                        UpdateGameState(prevState);
-                }
-
-                //Toggle Build State
-                if (Input.GetKeyDown(KeyCode.B))
-                {
-                    if (currentBuildState == BuildState.Build)
-                        currentBuildState = BuildState.Component;
-                    else if (currentBuildState == BuildState.Component)
-                        currentBuildState = BuildState.Destroy;
-                    else if (currentBuildState == BuildState.Destroy)
-                        currentBuildState = BuildState.Build;
-
-                    CheckForBuildStateUpdate();
-                    string text = "Build State = " + currentBuildState.ToString();
-                    Console.SendDebug(text);
-                }
-            }
-        }
-
-
 
         public void UpdateGameState(GameState newState)
         {
